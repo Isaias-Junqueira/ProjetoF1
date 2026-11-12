@@ -8,8 +8,8 @@ public class Piloto extends Pessoa {
 
     @Override
     public void exibirInformacoes() {
-        System.out.println("Nome: " + getNome());
-        System.out.println("Idade: " + getIdade());
-        System.out.println("Nacionalidade: " + getNacionalidade());
+        System.out.println("      Nome: " + getNome());
+        System.out.println("      Idade: " + getIdade());
+        System.out.println("      Nacionalidade: " + getNacionalidade());
     }
 }

@@ -22,7 +22,7 @@ public class Equipe {
 
     public void setNome(String nome) {
         if (nome == null || nome.isBlank()) {
-            throw new IllegalArgumentException("O nome da equipe não pode ser vazio.");
+            throw new IllegalArgumentException("O nome da equipe nao pode ser vazio.");
         }
         this.nome = nome;
     }
@@ -33,13 +33,12 @@ public class Equipe {
 
     public void setCor(String cor) {
         if (cor == null || cor.isBlank()) {
-            throw new IllegalArgumentException("A cor da equipe não pode ser vazia.");
+            throw new IllegalArgumentException("A cor da equipe nao pode ser vazia.");
         }
         this.cor = cor;
     }
 
     public List<Piloto> getPilotos() {
-        // A lista somente para leitura impede alterações fora desta classe.
         return Collections.unmodifiableList(pilotos);
     }
 
@@ -48,7 +47,7 @@ public class Equipe {
             return false;
         }
         if (pilotos.size() >= 2) {
-            System.out.println("A equipe já possui dois pilotos.");
+            System.out.println("A equipe ja possui dois pilotos.");
             return false;
         }
         pilotos.add(piloto);
@@ -56,21 +55,24 @@ public class Equipe {
     }
 
     public void exibirEquipe() {
+        System.out.println("\n========================================");
         System.out.println("Equipe: " + nome);
-        System.out.println("Cor: " + getCor());
-        System.out.println("Pilotos:");
+        System.out.println("Cor: " + cor);
+        System.out.println("----------------------------------------");
 
         if (pilotos.isEmpty()) {
-            System.out.println("Nenhum piloto cadastrado.");
-            return;
+            System.out.println("Pilotos: nenhum piloto cadastrado.");
+        } else {
+            System.out.println("Pilotos:");
+            for (int i = 0; i < pilotos.size(); i++) {
+                System.out.println("  [" + (i + 1) + "] ----------------------------");
+                pilotos.get(i).exibirInformacoes();
+            }
         }
 
-        for (Piloto piloto : pilotos) {
-            piloto.exibirInformacoes();
-        }
+        System.out.println("========================================");
     }
 
-    // A exclusão é centralizada aqui para preservar o encapsulamento da lista.
     public boolean removerPiloto(Piloto piloto) {
         return pilotos.remove(piloto);
     }

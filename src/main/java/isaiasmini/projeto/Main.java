@@ -1,91 +1,115 @@
 package isaiasmini.projeto;
 
-
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class Main {
 
     public static void main(String[] args) {
-
         Scanner scanner = new Scanner(System.in);
         SistemaF1 sistema = new SistemaF1();
 
-        int opcao;
+        try {
+            executarMenu(scanner, sistema);
+        } catch (NoSuchElementException | IllegalStateException e) {
+            System.out.println("\nEntrada encerrada. O sistema foi finalizado.");
+        } finally {
+            scanner.close();
+        }
+    }
 
-        do {
-            System.out.println("\n===== SISTEMA FÓRMULA 1 =====");
+    private static void executarMenu(Scanner scanner, SistemaF1 sistema) {
+        while (true) {
+            System.out.println("\n========================================");
+            System.out.println("           SISTEMA FORMULA 1");
+            System.out.println("========================================");
             System.out.println("1 - Cadastrar equipe");
             System.out.println("2 - Cadastrar piloto");
             System.out.println("3 - Visualizar equipes e pilotos");
             System.out.println("4 - Excluir piloto");
             System.out.println("5 - Alterar nome da equipe");
             System.out.println("0 - Sair");
-            System.out.print("Escolha: ");
+            System.out.println("----------------------------------------");
 
-            opcao = Integer.parseInt(scanner.nextLine());
+            int opcao = lerInteiro(scanner, "Escolha: ");
 
             switch (opcao) {
-
                 case 1:
-                    System.out.print("Nome da equipe: ");
-                    String nomeEquipe = scanner.nextLine();
-
-                    System.out.print("Cor da equipe: ");
-                    String cor = scanner.nextLine();
-
-                    sistema.cadastrarEquipe(nomeEquipe, cor);
+                    cadastrarEquipe(scanner, sistema);
                     break;
-
                 case 2:
-                    System.out.print("Nome do piloto: ");
-                    String nome = scanner.nextLine();
-
-                    System.out.print("Idade: ");
-                    int idade = Integer.parseInt(scanner.nextLine());
-
-                    System.out.print("Nacionalidade: ");
-                    String nacionalidade = scanner.nextLine();
-
-                    System.out.print("Equipe: ");
-                    String equipe = scanner.nextLine();
-
-                    sistema.cadastrarPiloto(
-                            nome, idade, nacionalidade, equipe
-                    );
+                    cadastrarPiloto(scanner, sistema);
                     break;
-
                 case 3:
                     sistema.listarEquipes();
                     break;
-
                 case 4:
-                    System.out.print("Nome do piloto que deseja excluir: ");
-                    String nomeExcluir = scanner.nextLine();
-
-                    sistema.excluirPiloto(nomeExcluir);
+                    sistema.excluirPiloto(lerTexto(scanner, "Nome do piloto que deseja excluir: "));
                     break;
-
                 case 5:
-                    System.out.print("Nome atual da equipe: ");
-                    String atual = scanner.nextLine();
-
-                    System.out.print("Novo nome: ");
-                    String novo = scanner.nextLine();
-
+                    String atual = lerTexto(scanner, "Nome atual da equipe: ");
+                    String novo = lerTexto(scanner, "Novo nome: ");
                     sistema.alterarNomeEquipe(atual, novo);
                     break;
-
                 case 0:
                     System.out.println("Encerrando sistema...");
-                    break;
-
+                    return;
                 default:
-                    System.out.println("Opção inválida!");
+                    System.out.println("Opcao invalida. Escolha uma opcao do menu.");
+            }
+        }
+    }
+
+    private static void cadastrarEquipe(Scanner scanner, SistemaF1 sistema) {
+        String nome = lerTexto(scanner, "Nome da equipe: ");
+        String cor = lerTexto(scanner, "Cor da equipe: ");
+        sistema.cadastrarEquipe(nome, cor);
+    }
+
+    private static void cadastrarPiloto(Scanner scanner, SistemaF1 sistema) {
+        String nome = lerTexto(scanner, "Nome do piloto: ");
+        int idade = lerInteiroNaoNegativo(scanner, "Idade: ");
+        String nacionalidade = lerTexto(scanner, "Nacionalidade: ");
+        String equipe = lerTexto(scanner, "Equipe: ");
+
+        sistema.cadastrarPiloto(nome, idade, nacionalidade, equipe);
+    }
+
+    private static String lerTexto(Scanner scanner, String mensagem) {
+        while (true) {
+            System.out.print(mensagem);
+            if (!scanner.hasNextLine()) {
+                throw new NoSuchElementException();
             }
 
-        } while (opcao != 0);
+            String valor = scanner.nextLine().trim();
+            if (!valor.isEmpty()) {
+                return valor;
+            }
 
-        scanner.close();
+            System.out.println("O valor nao pode ser vazio. Tente novamente.");
+        }
+    }
+
+    private static int lerInteiro(Scanner scanner, String mensagem) {
+        while (true) {
+            String valor = lerTexto(scanner, mensagem);
+            try {
+                return Integer.parseInt(valor);
+            } catch (NumberFormatException e) {
+                System.out.println("Digite um numero inteiro valido.");
+            }
+        }
+    }
+
+    private static int lerInteiroNaoNegativo(Scanner scanner, String mensagem) {
+        while (true) {
+            int valor = lerInteiro(scanner, mensagem);
+            if (valor >= 0) {
+                return valor;
+            }
+
+            System.out.println("A idade nao pode ser negativa.");
+        }
     }
 }
-
